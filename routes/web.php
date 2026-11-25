@@ -38,6 +38,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin routes
     Route::middleware('role:admin')->prefix('admin')->name('admin.')->group(function () {
         Route::livewire('/dashboard', 'pages::admin.dashboard')->name('dashboard');
+        Route::livewire('/requests/{maintenanceRequest}', 'pages::admin.request-details')->name('requests.show');
     });
 
     // Technician routes

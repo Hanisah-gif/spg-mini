@@ -25,7 +25,7 @@ new class extends Component
     #[Computed]
     public function blocks()
     {
-        return Block::orderBy('name')->get();
+        return Block::orderBy('block_name')->get();
     }
 
     public function submit()
@@ -73,7 +73,7 @@ new class extends Component
         <div class="grid gap-5 md:grid-cols-3">
             <flux:select wire:model="block_id" label="Block" placeholder="Select block">
                 @foreach ($this->blocks as $block)
-                    <flux:select.option :value="$block->id">{{ $block->name }}</flux:select.option>
+                    <flux:select.option :value="$block->id">{{ $block->block_name }}</flux:select.option>
                 @endforeach
             </flux:select>
 

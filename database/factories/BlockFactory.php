@@ -4,8 +4,11 @@ namespace Database\Factories;
 
 use App\Models\Block;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
-// STAND-IN for Person 2's shared schema. On merge, keep Person 2's version.
+/**
+ * @extends Factory<Block>
+ */
 class BlockFactory extends Factory
 {
     protected $model = Block::class;
@@ -13,7 +16,7 @@ class BlockFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Block '.fake()->unique()->bothify('?##'),
+            'block_name' => 'Block '.Str::upper(Str::random(4)),
         ];
     }
 }

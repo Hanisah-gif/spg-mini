@@ -30,6 +30,27 @@
                 placeholder="email@example.com"
             />
 
+            <!-- Hostel block & room (residents only) -->
+            <div class="grid grid-cols-2 gap-4">
+                <flux:select name="block_id" :label="__('Block')" :placeholder="__('Select block')" required>
+                    @foreach (\App\Models\Block::orderBy('block_name')->get() as $block)
+                        <flux:select.option value="{{ $block->id }}" :selected="old('block_id') == $block->id">
+                            {{ $block->block_name }}
+                        </flux:select.option>
+                    @endforeach
+                </flux:select>
+
+                <flux:input
+                    name="room"
+                    :label="__('Room')"
+                    :value="old('room')"
+                    type="text"
+                    required
+                    maxlength="50"
+                    :placeholder="__('e.g. 203')"
+                />
+            </div>
+
             <!-- Password -->
             <flux:input
                 name="password"

@@ -14,9 +14,10 @@ class MaintenanceRequestPolicy
         return $user->isAdmin();
     }
 
+    /** Assign / reassign a technician. A completed job can no longer be reassigned. */
     public function assign(User $user, MaintenanceRequest $request): bool
     {
-        return $user->isAdmin();
+        return $user->isAdmin() && ! $request->isCompleted();
     }
 
     public function overrideStatus(User $user, MaintenanceRequest $request): bool

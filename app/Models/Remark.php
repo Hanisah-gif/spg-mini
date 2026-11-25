@@ -2,24 +2,31 @@
 
 namespace App\Models;
 
+use Database\Factories\RemarkFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-// STAND-IN for Person 2's shared schema. On merge, keep Person 2's version.
 class Remark extends Model
 {
+    /** @use HasFactory<RemarkFactory> */
     use HasFactory;
 
-    protected $fillable = ['maintenance_request_id', 'user_id', 'body'];
+    protected $fillable = [
+        'maintenance_request_id',
+        'technician_id',
+        'remark',
+    ];
 
+    /** @return BelongsTo<MaintenanceRequest, $this> */
     public function maintenanceRequest(): BelongsTo
     {
         return $this->belongsTo(MaintenanceRequest::class);
     }
 
-    public function author(): BelongsTo
+    /** @return BelongsTo<User, $this> */
+    public function technician(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'technician_id');
     }
 }

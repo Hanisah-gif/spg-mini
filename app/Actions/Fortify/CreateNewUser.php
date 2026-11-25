@@ -22,12 +22,18 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             ...$this->profileRules(),
             'password' => $this->passwordRules(),
+            'block_id' => ['required', 'integer', 'exists:blocks,id'],
+            'room' => ['required', 'string', 'max:50'],
         ])->validate();
 
+        // Public registration is for residents only. 'role' is not fillable and is
+        // never read from the form; the users.role column defaults to 'resident'.
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => $input['password'],
+            'block_id' => $input['block_id'],
+            'room' => trim($input['room']),
         ]);
     }
 }
