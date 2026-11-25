@@ -15,6 +15,9 @@ class StoreRemarkRequest extends FormRequest
             && ($this->user()?->can('updateProgress', $maintenanceRequest) ?? false);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -22,6 +25,9 @@ class StoreRemarkRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [

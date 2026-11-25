@@ -16,6 +16,9 @@ class UpdateProgressRequest extends FormRequest
             && ($this->user()?->can('updateProgress', $maintenanceRequest) ?? false);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [
@@ -31,6 +34,9 @@ class UpdateProgressRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
