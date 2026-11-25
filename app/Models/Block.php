@@ -4,11 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-// STAND-IN for Person 2's shared schema. On merge, keep Person 2's version.
 class Block extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['block_name'];
+
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function maintenanceRequests(): HasMany
+    {
+        return $this->hasMany(MaintenanceRequest::class);
+    }
 }

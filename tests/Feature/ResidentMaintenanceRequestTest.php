@@ -55,7 +55,7 @@ test('resident cannot view another residents request', function () {
 
 test('request details page shows the full location label', function () {
     $resident = p1Resident();
-    $block = Block::factory()->create(['name' => 'Block A1']);
+    $block = Block::factory()->create(['block_name' => 'Block A1']);
     $request = MaintenanceRequest::factory()->create([
         'resident_id' => $resident->id,
         'block_id' => $block->id,
@@ -87,8 +87,8 @@ test('request details page shows status history and technician remarks', functio
 
     Remark::create([
         'maintenance_request_id' => $request->id,
-        'user_id' => $technician->id,
-        'body' => 'Replaced the fan motor',
+        'technician_id' => $technician->id,
+        'remark' => 'Replaced the fan motor',
     ]);
 
     $this->actingAs($resident)

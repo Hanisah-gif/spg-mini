@@ -44,9 +44,14 @@ test('role cannot be mass assigned', function () {
 });
 
 test('registering with a role field still creates a resident', function () {
+    // Registration requires block + room (shared schema), so send valid ones.
+    $block = \App\Models\Block::factory()->create();
+
     $this->post(route('register.store'), [
         'name' => 'Sneaky',
         'email' => 'sneaky@example.com',
+        'block_id' => $block->id,
+        'room' => '101',
         'password' => 'password',
         'password_confirmation' => 'password',
         'role' => 'admin',

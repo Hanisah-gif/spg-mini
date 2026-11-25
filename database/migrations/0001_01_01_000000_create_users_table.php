@@ -15,6 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+
+            // Role-based access: resident | admin | technician
+            $table->string('role')->default('resident');
+
+            // Where the user lives. Nullable: admins/technicians have no room.
+            // Deleting a block keeps the user but clears the link.
+            $table->foreignId('block_id')->nullable()->constrained('blocks')->nullOnDelete();
+            $table->string('room', 50)->nullable();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

@@ -36,6 +36,7 @@ class MaintenanceRequest extends Model
         'description',
         'category',
         'status',
+        'admin_remarks',
     ];
 
     public function resident(): BelongsTo
@@ -67,10 +68,15 @@ class MaintenanceRequest extends Model
     {
         return sprintf(
             '%s, Level %s, Room %s',
-            $this->block?->name ?? 'Unknown block',
+            $this->block?->block_name ?? 'Unknown block',
             $this->level,
             $this->room,
         );
+    }
+
+    public function statusLabel(): string
+    {
+        return self::STATUSES[$this->status] ?? ucfirst((string) $this->status);
     }
 
     public function isPending(): bool

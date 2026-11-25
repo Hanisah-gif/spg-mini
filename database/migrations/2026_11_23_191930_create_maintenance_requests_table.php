@@ -24,6 +24,7 @@ return new class extends Migration
                 ->nullOnDelete();
 
             // Location replaces the old free-text "location" column.
+            // RESTRICT: a block that still has requests cannot be deleted.
             $table->foreignId('block_id')->constrained('blocks')->restrictOnDelete();
             $table->unsignedTinyInteger('level');
             $table->string('room');
@@ -31,7 +32,10 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('category');
-            $table->string('status')->default('pending');
+            $table->string('status')->default('pending')->index();
+
+            // Admin override reason (Admin module). Technician notes live in the remarks table.
+            $table->text('admin_remarks')->nullable();
 
             $table->timestamps();
         });
