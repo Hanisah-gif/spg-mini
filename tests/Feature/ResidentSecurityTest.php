@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Block;
 use App\Models\MaintenanceRequest;
 use App\Models\User;
 
@@ -45,7 +46,7 @@ test('role cannot be mass assigned', function () {
 
 test('registering with a role field still creates a resident', function () {
     // Registration requires block + room (shared schema), so send valid ones.
-    $block = \App\Models\Block::factory()->create();
+    $block = Block::factory()->create();
 
     $this->post(route('register.store'), [
         'name' => 'Sneaky',

@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Policies\MaintenanceRequestPolicy;
 
 beforeEach(function () {
-    $this->policy = new MaintenanceRequestPolicy();
+    $this->policy = new MaintenanceRequestPolicy;
     $this->admin = User::factory()->create(['role' => 'admin']);
     $this->technician = User::factory()->create(['role' => 'technician']);
     $this->resident = User::factory()->create(['role' => 'resident']);
