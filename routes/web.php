@@ -44,6 +44,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Technician routes
     Route::middleware('role:technician')->prefix('technician')->name('technician.')->group(function () {
         Route::livewire('/dashboard', 'pages::technician.dashboard')->name('dashboard');
+        Route::livewire('/requests/{request}', 'pages::technician.request-details')->name('requests.show');
     });
 });
 
