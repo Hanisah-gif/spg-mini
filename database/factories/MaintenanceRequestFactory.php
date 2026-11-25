@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Block;
 use App\Models\MaintenanceRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -13,25 +14,15 @@ class MaintenanceRequestFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
+            'resident_id' => User::factory(),
+            'technician_id' => null,
+            'block_id' => Block::factory(),
+            'level' => fake()->numberBetween(1, 10),
+            'room' => (string) fake()->numberBetween(1, 20),
             'title' => fake()->sentence(3),
             'description' => fake()->paragraph(),
-            'category' => fake()->randomElement([
-                'Electrical',
-                'Plumbing',
-                'Furniture',
-                'Cleaning',
-                'Other',
-            ]),
-            'location' => fake()->randomElement([
-                'A1-2-1',
-                'A2-4-5',
-                'A6-7-1',
-            ]),
-            'status' => 'pending',
-            'technician_id' => null,
-            'admin_remarks' => null,
-            'technician_remarks' => null,
+            'category' => fake()->randomElement(MaintenanceRequest::CATEGORIES),
+            'status' => MaintenanceRequest::STATUS_PENDING,
         ];
     }
 }

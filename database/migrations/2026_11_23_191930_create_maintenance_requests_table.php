@@ -14,22 +14,24 @@ return new class extends Migration
         Schema::create('maintenance_requests', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            // Renamed from user_id. Deleting a resident deletes their requests.
+            $table->foreignId('resident_id')->constrained('users')->cascadeOnDelete();
 
-            $table->string('title');
-            $table->text('description');
-            $table->string('category');
-            $table->string('location');
-
-            $table->string('status')->default('pending');
-
+            // Deleting a technician keeps the request but unassigns it.
             $table->foreignId('technician_id')
                 ->nullable()
                 ->constrained('users')
                 ->nullOnDelete();
 
-            $table->text('admin_remarks')->nullable();
-            $table->text('technician_remarks')->nullable();
+            // Location replaces the old free-text "location" column.
+            $table->foreignId('block_id')->constrained('blocks')->restrictOnDelete();
+            $table->unsignedTinyInteger('level');
+            $table->string('room');
+
+            $table->string('title');
+            $table->text('description');
+            $table->string('category');
+            $table->string('status')->default('pending');
 
             $table->timestamps();
         });

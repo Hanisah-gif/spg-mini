@@ -1,109 +1,108 @@
 <?php
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreMaintenanceRequest;
 use App\Actions\CreateMaintenanceRequest;
+use App\Http\Requests\StoreMaintenanceRequest;
+use App\Models\Block;
+use App\Models\MaintenanceRequest;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
+use Livewire\Component;
 
 new class extends Component
 {
-    public $title = '';
-    public $description = '';
-    public $category = '';
-    public $location = '';
+    public string $title = '';
 
+    public string $category = '';
 
-public function submit()
-{
-    
-   $formRequest = new StoreMaintenanceRequest();
+    public string $block_id = '';
 
-    $validated = $this->validate(
-        $formRequest->rules(),
-        $formRequest->messages()
-    );
+    public string $level = '';
 
-    app(CreateMaintenanceRequest::class)->execute([
-        ...$validated,
-        'user_id' => Auth::id(),
-    ]);
+    public string $room = '';
 
-    session()->flash('success', 'Maintenance request submitted successfully!');
+    public string $description = '';
 
-    $this->redirect(route('resident.dashboard'));
-}
+    #[Computed]
+    public function blocks()
+    {
+        return Block::orderBy('name')->get();
+    }
 
+    public function submit()
+    {
+        // 1. Policy
+        $this->authorize('create', MaintenanceRequest::class);
+
+        // 2. Form Request (same rules as the HTTP layer)
+        $formRequest = new StoreMaintenanceRequest;
+        $validated = $this->validate($formRequest->rules(), $formRequest->messages());
+
+        // 3. Action
+        app(CreateMaintenanceRequest::class)->execute([
+            ...$validated,
+            'resident_id' => Auth::id(),
+        ]);
+
+        // 4. Response
+        session()->flash('success', 'Maintenance request submitted successfully!');
+
+        return $this->redirect(route('resident.dashboard'));
+    }
 };
 ?>
 
-<div>
-  <div class="p-6 space-y-6 max-w-3xl">
+<div class="mx-auto w-full max-w-3xl space-y-6 p-6">
     <div>
-        <h1 class="text-2xl font-bold">Submit Maintenance Request</h1>
-        <p class="text-gray-500">
-            Describe the maintenance problem in your hostel.
-        </p>
+        <flux:heading size="xl" level="1">Submit Maintenance Request</flux:heading>
+        <flux:subheading>Describe the maintenance problem in your hostel.</flux:subheading>
     </div>
 
-    @if (session('success'))
-        <div class="rounded-lg bg-green-100 p-4 text-green-700">
-            {{ session('success') }}
-        </div>
-    @endif
-
     <form wire:submit="submit" class="space-y-5">
+        <flux:input
+            wire:model="title"
+            label="Request title"
+            placeholder="e.g. Broken ceiling fan"
+        />
 
-        <div>
-            <label class="block font-medium mb-2">Request Title</label>
-            <input type="text" wire:model.live="title"
-                class="w-full rounded-lg border p-3"
-                placeholder="e.g. Broken ceiling fan">
-            @error('title')
-                <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror
+        <flux:select wire:model="category" label="Category" placeholder="Select category">
+            @foreach (\App\Models\MaintenanceRequest::CATEGORIES as $option)
+                <flux:select.option :value="$option">{{ $option }}</flux:select.option>
+            @endforeach
+        </flux:select>
+
+        <div class="grid gap-5 md:grid-cols-3">
+            <flux:select wire:model="block_id" label="Block" placeholder="Select block">
+                @foreach ($this->blocks as $block)
+                    <flux:select.option :value="$block->id">{{ $block->name }}</flux:select.option>
+                @endforeach
+            </flux:select>
+
+            <flux:input
+                wire:model="level"
+                type="number"
+                min="1"
+                max="30"
+                label="Level"
+                placeholder="e.g. 3"
+            />
+
+            <flux:input
+                wire:model="room"
+                label="Room"
+                placeholder="e.g. 203"
+            />
         </div>
 
-        <div>
-            <label class="block font-medium mb-2">Category</label>
-            <select wire:model.live="category"
-                class="w-full rounded-lg border p-3">
-                <option value="">Select category</option>
-                <option value="Electrical">Electrical</option>
-                <option value="Plumbing">Plumbing</option>
-                <option value="Furniture">Furniture</option>
-                <option value="Cleaning">Cleaning</option>
-                <option value="Other">Other</option>
-            </select>
-            @error('category')
-                <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror
+        <flux:textarea
+            wire:model="description"
+            label="Description"
+            rows="5"
+            placeholder="Explain the maintenance problem..."
+        />
+
+        <div class="flex gap-2">
+            <flux:button type="submit" variant="primary">Submit Request</flux:button>
+            <flux:button :href="route('resident.dashboard')" wire:navigate>Cancel</flux:button>
         </div>
-
-        <div>
-            <label class="block font-medium mb-2">Hostel Location</label>
-            <input type="text" wire:model.live="location"
-                class="w-full rounded-lg border p-3"
-                placeholder="e.g. Block A, Room 203">
-            @error('location')
-                <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <div>
-            <label class="block font-medium mb-2">Description</label>
-            <textarea wire:model.live="description" rows="5"
-                class="w-full rounded-lg border p-3"
-                placeholder="Explain the maintenance problem..."></textarea>
-            @error('description')
-                <p class="text-sm text-red-500">{{ $message }}</p>
-            @enderror
-        </div>
-
-        <button type="submit"
-    style="display: block; background-color: black; color: white; padding: 12px 24px; border-radius: 8px;">
-    Submit Request
-</button>
-
     </form>
-</div>
 </div>

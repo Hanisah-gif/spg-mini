@@ -29,7 +29,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  */
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
@@ -69,7 +69,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     public function maintenanceRequests(): HasMany
     {
-        return $this->hasMany(MaintenanceRequest::class, 'user_id');
+        return $this->hasMany(MaintenanceRequest::class, 'resident_id');
     }
 
     public function assignedMaintenanceRequests(): HasMany
