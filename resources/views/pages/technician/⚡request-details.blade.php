@@ -33,13 +33,13 @@ new class extends Component
     #[Computed]
     public function statusLogs()
     {
-        return $this->request->statusLogs()->with('changedBy')->get();
+        return $this->request->statusLogs()->with('changer')->get();
     }
 
     #[Computed]
     public function remarks()
     {
-        return $this->request->remarks()->with('author')->get();
+        return $this->request->remarks()->with('technician')->get();
     }
 
     private function applyStatusTransition(string $targetStatus): void
@@ -267,13 +267,13 @@ new class extends Component
             @forelse ($this->remarks as $remark)
                 <div wire:key="remark-{{ $remark->id }}" class="space-y-1 border-b border-zinc-200 pb-3 last:border-0 last:pb-0 dark:border-zinc-700">
                     <div class="flex flex-wrap items-center gap-2">
-                        <flux:text class="font-medium">{{ $remark->author?->name ?? 'Unknown user' }}</flux:text>
-                        @if ($remark->author)
-                            <flux:badge size="sm">{{ ucfirst($remark->author->role) }}</flux:badge>
+                        <flux:text class="font-medium">{{ $remark->technician?->name ?? 'Unknown user' }}</flux:text>
+                        @if ($remark->technician)
+                            <flux:badge size="sm">{{ ucfirst($remark->technician->role) }}</flux:badge>
                         @endif
                         <flux:text class="ms-auto text-sm">{{ $remark->created_at?->format('d M Y, h:i A') ?? '' }}</flux:text>
                     </div>
-                    <flux:text class="whitespace-pre-line">{{ $remark->body }}</flux:text>
+                    <flux:text class="whitespace-pre-line">{{ $remark->remark }}</flux:text>
                 </div>
             @empty
                 <flux:text>No remarks yet.</flux:text>
@@ -293,7 +293,7 @@ new class extends Component
                 <x-status-badge :status="$log->status" />
 
                 <flux:text class="ms-auto text-sm">
-                    {{ $log->changedBy?->name ?? 'Unknown user' }} · {{ $log->created_at?->format('d M Y, h:i A') ?? '' }}
+                    {{ $log->changer?->name ?? 'Unknown user' }} · {{ $log->created_at?->format('d M Y, h:i A') ?? '' }}
                 </flux:text>
             </div>
         @empty
