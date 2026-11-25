@@ -7,6 +7,9 @@ use App\Models\MaintenanceRequest;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
+/**
+ * @extends Factory<MaintenanceRequest>
+ */
 class MaintenanceRequestFactory extends Factory
 {
     protected $model = MaintenanceRequest::class;

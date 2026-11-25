@@ -14,11 +14,13 @@ class StatusLog extends Model
         'changed_by',
     ];
 
+    /** @return BelongsTo<MaintenanceRequest, $this> */
     public function maintenanceRequest(): BelongsTo
     {
         return $this->belongsTo(MaintenanceRequest::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function changer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'changed_by');

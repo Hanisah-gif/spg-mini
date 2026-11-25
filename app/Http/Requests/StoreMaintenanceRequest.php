@@ -13,6 +13,9 @@ class StoreMaintenanceRequest extends FormRequest
         return $this->user()?->can('create', MaintenanceRequest::class) ?? false;
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function rules(): array
     {
         return [

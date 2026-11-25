@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\MaintenanceRequestFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class MaintenanceRequest extends Model
 {
+    /** @use HasFactory<MaintenanceRequestFactory> */
     use HasFactory;
 
     public const STATUS_PENDING = 'pending';
@@ -39,26 +41,31 @@ class MaintenanceRequest extends Model
         'admin_remarks',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function resident(): BelongsTo
     {
         return $this->belongsTo(User::class, 'resident_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function technician(): BelongsTo
     {
         return $this->belongsTo(User::class, 'technician_id');
     }
 
+    /** @return BelongsTo<Block, $this> */
     public function block(): BelongsTo
     {
         return $this->belongsTo(Block::class);
     }
 
+    /** @return HasMany<StatusLog, $this> */
     public function statusLogs(): HasMany
     {
         return $this->hasMany(StatusLog::class)->latest('id');
     }
 
+    /** @return HasMany<Remark, $this> */
     public function remarks(): HasMany
     {
         return $this->hasMany(Remark::class)->latest('id');
@@ -68,7 +75,7 @@ class MaintenanceRequest extends Model
     {
         return sprintf(
             '%s, Level %s, Room %s',
-            $this->block?->block_name ?? 'Unknown block',
+            $this->block->block_name ?? 'Unknown block',
             $this->level,
             $this->room,
         );
